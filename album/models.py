@@ -1,7 +1,6 @@
 from django.db import models
-from Artist.models import Artist
+from artist.models import Artist
 # Create your models here.
-
 class Album(models.Model):
 	name = models.CharField(max_length=30)
 	artist = models.ForeignKey(Artist, on_delete=models.PROTECT, 
