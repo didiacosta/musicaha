@@ -19,7 +19,14 @@ from rest_framework import routers
 from django.conf import settings
 from django.conf.urls.static import static
 
+#viewsets
+from artist.views import ArtistViewSet
+from album.views import AlbumViewSet
+
 router =  routers.DefaultRouter()
+
+router.register(r'artist', ArtistViewSet)
+router.register(r'album', AlbumViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
