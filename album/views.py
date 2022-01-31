@@ -40,10 +40,17 @@ class AlbumViewSet(viewsets.ModelViewSet):
 		queryset = super(AlbumViewSet, self).get_queryset()
 
 		dato = self.request.query_params.get('dato', None)
+		artist = self.request.query_params.get('artist', None)
+		artistNick = self.request.query_params.get('artistnick', None)
 		qset = ~(Q(id=0))
 
-		if dato:
-			qset = qset & (Q(name__icontains=dato))
+		if dato or artist or artistNick:
+			if dato:
+				qset = qset & (Q(name__icontains=dato))
+			elif artist:
+				qset = qset & (Q(artist__id=artist))
+			else:
+				qset = qset & (Q(artist__nickName__icontains=artistNick))
 
 		queryset = self.model.objects.filter(qset).order_by('name')
 
@@ -55,21 +62,83 @@ class AlbumViewSet(viewsets.ModelViewSet):
 		serializer = self.get_serializer(queryset, many=True)
 
 		return Response(Structure.success(message,serializer.data),
-			status=status.HTTP_200_OK)		
+			status=status.HTTP_200_OK)
 
 
-
-
-	#Crea un artista
+	#Crea un album
 	def create(self, request, *args, **kwargs):
-		pass
+		if request.method == 'POST':
 
-	#Actualiza un artista	
+			serializer = AlbumSerializer(
+				data=request.data, context={'request': request})
+
+			if serializer.is_valid():
+				serializer.save(
+					artist_id = request.data['artist_id'])
+
+				return Response(Structure.success('El registro ha sido guardado correctamente',
+					serializer.data),
+					status = status.HTTP_200_OK)
+			else:
+				#import pdb; pdb.set_trace()
+				return Response(Structure.error(
+					'datos requeridos no fueron recibidos'),
+					status=status.HTTP_400_BAD_REQUEST)
+		else:
+			return Response(Structure.error(
+				'Este servicio solo recibe peticiones POST'),
+				status=status.HTTP_400_BAD_REQUEST)			
+
+	#Actualiza un album	
 	def update(self,request,*args,**kwargs):
-		pass
 
-	#destruye un artista	
+		if request.method == 'PUT':
+			partial = kwargs.pop('partial', False)
+			instance = self.get_object()
+			
+			serializer = AlbumSerializer(
+				instance, 
+				data=request.data, 
+				context={
+					'request': request
+				},
+				partial=partial)
+
+			if serializer.is_valid():
+				serializer.save(
+					artist_id=request.data['artist_id'])
+
+				return Response(Structure.success(
+					'El registro ha sido actualizado exitosamente',serializer.data),
+					status = status.HTTP_200_OK)
+			else:
+				#import pdb; pdb.set_trace()
+				return Response(Structure.error(
+					'Datos requeridos no fueron recibidos'),
+					status=status.HTTP_400_BAD_REQUEST)
+		else:
+			return Response(Structure.error(
+				'Este servicio solo acepta peticiones PUT'),
+				status=status.HTTP_400_BAD_REQUEST)
+
+
+	#destruye un album	
 	def destroy(self,request,*args,**kwargs):
-		pass
+		if request.method == 'DELETE':
+			instance = self.get_object()
+			if instance:
+				self.perform_destroy(instance)
+				return Response(Structure.success(
+					'El registro ha sido eliminado correctamente',None),
+					status = status.HTTP_200_OK)				
+			else:
+				return Response(Structure.error(
+					'El album no fue encontrado'),
+					status=status.HTTP_400_BAD_REQUEST)				
+
+		else:
+			return Response(Structure.error(
+				'Este servicio solo acepta peticiones DELETE'),
+				status=status.HTTP_400_BAD_REQUEST)
 
 
