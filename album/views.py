@@ -7,7 +7,7 @@ from rest_framework import status
 from django.db.models import Q
 #librerias internas
 from utilities.structure import Structure
-
+from utilities.functions import Functions
 #import modelos
 from .models import Album
 #import serializers
@@ -125,16 +125,24 @@ class AlbumViewSet(viewsets.ModelViewSet):
 	#destruye un album	
 	def destroy(self,request,*args,**kwargs):
 		if request.method == 'DELETE':
-			instance = self.get_object()
-			if instance:
-				self.perform_destroy(instance)
-				return Response(Structure.success(
-					'El registro ha sido eliminado correctamente',None),
-					status = status.HTTP_200_OK)				
-			else:
+			try:
+				instance = self.get_object()
+				if instance:
+					self.perform_destroy(instance)
+					return Response(Structure.success(
+						'El registro ha sido eliminado correctamente',None),
+						status = status.HTTP_200_OK)				
+				else:
+					return Response(Structure.error(
+						'El album no fue encontrado'),
+						status=status.HTTP_400_BAD_REQUEST)		
+
+			except Exception as e: #capturo la excepción
+				Functions.toLog(e,'album.views.destroy')
 				return Response(Structure.error(
-					'El album no fue encontrado'),
-					status=status.HTTP_400_BAD_REQUEST)				
+					'Se presentaron errores en el servidor, comuniquese con ' + \
+					 'el administrador de sistema'),
+					status=status.HTTP_500_INTERNAL_SERVER_ERROR)	
 
 		else:
 			return Response(Structure.error(
