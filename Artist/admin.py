@@ -7,3 +7,4 @@ class AdminArtist(admin.ModelAdmin):
 	search_fields = ('firstName','lastName','nickName')
 
 admin.site.register(Artist, AdminArtist)
+
