@@ -1,0 +1,15 @@
+{% extends 'masterpage.html' %}
+{% load staticfiles %}
+{% block title %}ALBUM{% endblock %}
+{% block contenido %}
+	<h2> MUSICAHA - Album </h2>
+{% endblock %}
+{% block imports %}
+	<script type="text/javascript" src='{% static "js/ViewModels/album/album.js" %}'></script>
+
+	<script type="text/javascript">
+		$(document).ready(function () {
+			album.consultar(1);
+		});
+	</script>
+{% endblock %}

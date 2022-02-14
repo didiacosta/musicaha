@@ -1,6 +1,8 @@
 from django.shortcuts import render,redirect
 from django.contrib.auth import authenticate, login, logout
 from django.urls import reverse
+from django.conf import settings
+from usuario.models import AppUser
 # Create your views here.
 
 def login_view(request):
@@ -39,6 +41,14 @@ def logout_view(request):
 def home_view(request):
 	username = request.user.username
 	if request.user.is_authenticated:
-		return render(request,'usuario/home.html',{'username':username.capitalize()}) 
+		objUsuario = AppUser.objects.get(user__id=request.user.id)
+		#import pdb; pdb.set_trace()
+		return render(request,'usuario/home.html',
+			{
+				'username': username.capitalize(),
+				'foto': settings.MEDIA_ROOT + '\\' +  \
+				 objUsuario.foto.name.replace('/','\\')
+			}
+		) 
 	else:
 		return render(request,'usuario/login.html',{}) 

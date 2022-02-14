@@ -65,7 +65,7 @@
 
             <!-- Nav Item - Tables -->
             <li class="nav-item">
-                <a class="nav-link" href="tables.html">
+                <a class="nav-link" href="{% url 'album.home' %}">
                     <i class="fas fa-fw fa-table"></i>
                     <span>Album</span></a>
             </li>
@@ -101,7 +101,7 @@
                     </button>
 
                     <!-- Topbar Search -->
-                    <form
+<!--                     <form
                         class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
                         <div class="input-group">
                             <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
@@ -112,7 +112,23 @@
                                 </button>
                             </div>
                         </div>
-                    </form>
+                    </form> -->
+                    {% block toolbar %}
+
+                        <div class="input-group">
+                            <a href="#" data-bind="click:abrir_modal">
+                             <i class="fas fa-plus-circle fa-2x"></i>
+                            </a>
+                            <input type="text" class="form-control bg-light border-0 small" placeholder="Buscar por nombre..." name='txtBuscar' id='txtBuscar'
+                                aria-label="Search" aria-describedby="basic-addon2">
+                            <div class="input-group-append">
+                                <button class="btn btn-primary" type="button">
+                                    <i class="fas fa-search fa-sm"></i>
+                                </button>
+                            </div>
+                        </div>
+                    
+                    {% endblock toolbar %}
 
                     <!-- Topbar Navbar -->
                     <ul class="navbar-nav ml-auto">
@@ -127,9 +143,9 @@
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Douglas McGee</span>
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">{{ username }}</span>
                                 <img class="img-profile rounded-circle"
-                                    src="{% static 'img/undraw_profile.svg' %}">
+                                    src="{{ foto }}" >
                             </a>
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
@@ -162,6 +178,9 @@
 
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
+                    <div id='loading' style="display: none;">
+                        <div class="pop-fondo"></div><img class="pop-imagen" src='{% static "img/iconoCargando.gif" %}'>
+                    </div>
 					{% block contenido %}{% endblock contenido %}					
 
                 </div>
@@ -207,6 +226,21 @@
     <!-- Page level custom scripts -->
     <script src="{% static 'js/demo/chart-area-demo.js' %}"></script>
     <script src="{% static 'js/demo/chart-pie-demo.js' %}"></script>
+
+     <!-- Invocacion knockout -->
+    <script type="text/javascript" src='{% static "js/callback/ajax-callback.js" %}?cache=6'></script>
+    <script type="text/javascript" src='{% static "js/jqueryConfirm/jquery-confirm.js" %}'></script>
+
+    <script type="text/javascript" src='{% static "js/knockout/knockout-3.4.0.js" %}'></script>
+    <script type="text/javascript" src='{% static "js/knockout/knockout.mapping-latest.js" %}'></script>
+    <script type="text/javascript" src='{% static "js/knockout/knockout.validation.js" %}'></script>
+    <script type="text/javascript" src='{% static "js/knockout/knockstrap.min.js" %}'></script>
+
+
+    <script type="text/javascript" src='{% static "js/knockout/controles.js" %}'></script>
+
+    {% block imports %}
+    {% endblock %}
 
 </body>
 

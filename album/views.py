@@ -149,4 +149,11 @@ class AlbumViewSet(viewsets.ModelViewSet):
 				'Este servicio solo acepta peticiones DELETE'),
 				status=status.HTTP_400_BAD_REQUEST)
 
+def home_view(request):
+	username = request.user.username
+	if request.user.is_authenticated:
+		return render(request,'album/albumhome.html',{'username':username.capitalize()}) 
+	else:
+		return render(request,'usuario/login.html',{}) 
+
 
