@@ -4,6 +4,7 @@ from django.urls import reverse
 # Create your views here.
 
 def login_view(request):
+
 	mensaje = ''
 	if request.user.is_authenticated:
 		# Lo redirecciono al homepage de mi aplicacion
@@ -12,6 +13,7 @@ def login_view(request):
 		if request.method == 'POST':
 			username = request.POST.get('usuario')
 			password = request.POST.get('password')
+			#import pdb; pdb.set_trace()
 			user = authenticate(username=username, password=password)
 
 			if user:
