@@ -4,8 +4,8 @@ from .models import Track
 
 # Register your models here.
 class AdminTrack(admin.ModelAdmin):
-	list_display = ('id','name','gender','year','name_album')
-	list_filter = ('name_album',)
+	list_display = ('id','name','gender','year','album','file', 'artistFullName')
+	list_filter = ('album',)
 	search_fields = ('name',)
 
 admin.site.register(Track, AdminTrack)
