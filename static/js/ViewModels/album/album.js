@@ -24,9 +24,10 @@ function AlbumViewModel() {
 				}
 			}
 			RequestGet(function (datos, success, mensage) {
-			 	if (success == 'ok' && datos.data!=null && datos.data.length > 0) {
+			 	if (success == 'success' && datos!=null && datos.length > 0) {
 			 		self.mensaje('');
-			 		self.listado(datos.data);
+			 		self.listado(agregarOpcionesObservable(datos));
+
 			 	} else {
 			 		self.listado([]);
 			 		self.mensaje(mensajeNoFound);
@@ -37,6 +38,14 @@ function AlbumViewModel() {
 
 			},path, parameter,undefined, false);
 		}
+		
+	}
+	self.abrir_modal = function(){
+		alert('nuevo album....');
+	}
+	self.ver_detalle = function(id){
+		alert('ver album ' + id);
 	}
 }
 var album = new AlbumViewModel();
+ko.applyBindings(album);

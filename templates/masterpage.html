@@ -20,7 +20,7 @@
 
     <!-- Custom styles for this template-->
     <link href="{% static 'css/sb-admin-2.min.css' %}" rel="stylesheet">
-    <title>{% block recursoscss %}{% endblock %}</title>
+    {% block recursoscss %}{% endblock %}
 </head>
 
 <body id="page-top">
@@ -221,11 +221,11 @@
     <script src="{% static 'js/sb-admin-2.min.js' %}"></script>
 
     <!-- Page level plugins -->
-    <script src="{% static 'vendor/chart.js/Chart.min.js' %}"></script>
+    <!-- <script src="{% static 'vendor/chart.js/Chart.min.js' %}"></script> -->
 
     <!-- Page level custom scripts -->
-    <script src="{% static 'js/demo/chart-area-demo.js' %}"></script>
-    <script src="{% static 'js/demo/chart-pie-demo.js' %}"></script>
+<!--     <script src="{% static 'js/demo/chart-area-demo.js' %}"></script>
+    <script src="{% static 'js/demo/chart-pie-demo.js' %}"></script> -->
 
      <!-- Invocacion knockout -->
     <script type="text/javascript" src='{% static "js/callback/ajax-callback.js" %}?cache=6'></script>
