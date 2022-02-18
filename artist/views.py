@@ -40,6 +40,8 @@ class ArtistViewSet(viewsets.ModelViewSet):
 		queryset = super(ArtistViewSet, self).get_queryset()
 
 		dato = self.request.query_params.get('dato', None)
+		sinpaginacion = self.request.query_params.get('sinpaginacion', None)
+
 		qset = ~(Q(id=0))
 
 		if dato:
@@ -54,10 +56,18 @@ class ArtistViewSet(viewsets.ModelViewSet):
 		else:
 			message = ''
 
-		serializer = self.get_serializer(queryset, many=True)
+		if sinpaginacion is None:
+			page = self.paginate_queryset(queryset)
+			if page is not None:
+				serializer = self.get_serializer(page,many=True)
+				return self.get_paginated_response(
+					Structure.success(message,serializer.data))
+		else:
+			serializer = self.get_serializer(queryset, many=True)	
+			return Response(Structure.success(message,serializer.data),
+				status=status.HTTP_200_OK)			
+		
 
-		return Response(Structure.success(message,serializer.data),
-			status=status.HTTP_200_OK)		
 
 
 

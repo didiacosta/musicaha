@@ -2,8 +2,8 @@
 {% load staticfiles %}
 {% block title %}ALBUM{% endblock %}
 {% block recursoscss %}
-	<link href="{% static 'vendor/datatables/dataTables.bootstrap4.min.css' %}" rel="stylesheet">
-
+	<link rel="stylesheet" type="text/css" href="{% static 'vendor/datatables/dataTables.bootstrap4.min.css' %}" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href='{% static "css/fileInput/fileinput.min.css" %}'>
 {% endblock %}
 {% block contenido %}
 	<h2> MUSICAHA - Album </h2>
@@ -58,8 +58,54 @@
     <a class="scroll-to-top rounded" href="#page-top">
         <i class="fas fa-angle-up"></i>
     </a>
+    <!-- new album Modal-->
+    <div class="modal fade" id="newAlbumModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Nuevo Album</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                	<form action="." method="post" enctype="multipart/form-data">
+                		{% csrf_token %}
+                		<div class="form-group row">
+	                        <div class="col-sm-6 mb-3 mb-sm-0">
+	                            <input type="text" class="form-control form-control-user" id="txtNombre" placeholder="Nombre del album" data-bind="value: albumVO.name">
+	                        </div>
+                    	</div>
+	                    <div class="form-group row">
+	                        <div class="col-sm-6">
+	                        	<select class="form-control" data-bind="options: listadoDeArtistas,
+	                                           optionsText: 'nickName', 
+	                                           optionsValue: 'id', 
+	                                           optionsCaption: 'Seleccione el artista...',
+	                                           value: albumVO.artist_id" />
+	                        </div>	
+	                    </div>
+	                    <div class="form-group row">
+	                    	<div class="col-sm-6">
+	                    		<input type="file" class="note-image-input" id="cover" name="cover" data-bind="fileData:{value:albumVO.cover,allowedFileExtensions: ['png','jpg', 'jpeg'],elErrorContainer: '#errorBlock', removeLabel:''}"/>
+	                    		<input type="hidden" data-bind="value:albumVO.cover">
+	                    	</div>
+	                    	
+	                    </div>	                    
+                		
+                	</form>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">cancelar</button>
+                    <a class="btn btn-primary" href="#" data-bind="click: guardarAlbum">Guardar</a>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
 {% block imports %}
+	<script type="text/javascript" src='{% static "js/plugins/fileInput/fileinput.js" %}'></script>
 	<script type="text/javascript" src='{% static "js/ViewModels/album/album.js" %}'></script>
 
 	<script type="text/javascript" src='{% static "vendor/datatables/jquery.dataTables.min.js" %}'></script>
