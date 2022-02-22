@@ -12,6 +12,32 @@ function AlbumViewModel() {
 		artist_id: ko.observable(0).extend({ required: { message: ' Debe Seleccionar el artista.' } })
 	}
 
+	self.paginacion = {
+        pagina_actual: ko.observable(1),
+        total: ko.observable(0),
+        maxPaginas: ko.observable(5),
+        directiones: ko.observable(true),
+        limite: ko.observable(true),
+        cantidad_por_paginas: ko.observable(0),
+        text: {
+            first: ko.observable('Inicio  '),
+            last: ko.observable('  Fin'),
+            back: ko.observable('«'),
+            forward: ko.observable('»')
+        }
+    }
+
+    self.paginacion.pagina_actual.subscribe(function (pagina) {    
+       self.consultar(pagina);
+    });
+
+    self.llenar_paginacion = function (data,pagina) {
+        self.paginacion.pagina_actual(pagina);
+        self.paginacion.total(data.count);       
+        self.paginacion.cantidad_por_paginas(resultadosPorPagina);
+    }
+
+
 	self.consultarArtistas = function(){
 		//if (pagina > 0) {
 			path = path_principal + '/api/artist/?format=json&sinpaginacion=1';
@@ -43,20 +69,20 @@ function AlbumViewModel() {
 			}else{
 				parameter = {
 					dato: $('#txtBuscar').val(),
-					offset: pagina
+					page: pagina
 				}
 			}
 			RequestGet(function (datos, success, mensage) {
-			 	if (success == 'success' && datos!=null && datos.length > 0) {
+			 	if (success == 'success' && datos!=null && datos.data.length > 0) {
 			 		self.mensaje('');
-			 		self.listado(agregarOpcionesObservable(datos));
+			 		self.listado(agregarOpcionesObservable(datos.data));
 
 			 	} else {
 			 		self.listado([]);
 			 		self.mensaje(mensajeNoFound);
 			 		cerrarLoading()
 			 	}
-			 	//self.llenar_paginacion(datos,pagina);
+			 	self.llenar_paginacion(datos,pagina);
 			 	cerrarLoading();
 
 			},path, parameter,undefined, false);

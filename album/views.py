@@ -24,7 +24,7 @@ class AlbumViewSet(viewsets.ModelViewSet):
 	serializer_class = AlbumSerializer
 	queryset = model.objects.all()
 	parser_classes = (FormParser, MultiPartParser,)
-	paginate_by = 10
+	#paginate_by = 10
 
 	#Devuelve 1 Artista recibe un id
 	def retrieve(self,request,*args, **kwargs):
@@ -42,6 +42,8 @@ class AlbumViewSet(viewsets.ModelViewSet):
 		dato = self.request.query_params.get('dato', None)
 		artist = self.request.query_params.get('artist', None)
 		artistNick = self.request.query_params.get('artistnick', None)
+		sinpaginacion = self.request.query_params.get('sinpaginacion', None)
+
 		qset = ~(Q(id=0))
 
 		if dato or artist or artistNick:
@@ -52,7 +54,7 @@ class AlbumViewSet(viewsets.ModelViewSet):
 			else:
 				qset = qset & (Q(artist__nickName__icontains=artistNick))
 
-		queryset = self.model.objects.filter(qset).order_by('name')
+		queryset = self.model.objects.filter(qset).order_by('id')
 
 		if queryset.count() == 0:
 			message = 'No se encontraron datos'
@@ -61,8 +63,16 @@ class AlbumViewSet(viewsets.ModelViewSet):
 
 		serializer = self.get_serializer(queryset, many=True)
 
-		return Response(Structure.success(message,serializer.data),
-			status=status.HTTP_200_OK)
+		if sinpaginacion is None:
+			page = self.paginate_queryset(queryset)
+			if page is not None:
+				serializer = self.get_serializer(page,many=True)
+				return self.get_paginated_response(
+					Structure.success(message,serializer.data))
+		else:
+			serializer = self.get_serializer(queryset, many=True)	
+			return Response(Structure.success(message,serializer.data),
+				status=status.HTTP_200_OK)	
 
 
 	#Crea un album
