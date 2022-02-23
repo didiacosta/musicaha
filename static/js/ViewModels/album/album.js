@@ -8,7 +8,7 @@ function AlbumViewModel() {
 	self.albumVO = {
 		id: ko.observable(0),
 		name: ko.observable('').extend({ required: { message: ' Digite el nombre del album.' } }),
-		cover: ko.observable('').extend({ required: { message: ' Debe cargar la imagen de la caratula.' } }),
+		cover: ko.observable(''),
 		artist_id: ko.observable(0).extend({ required: { message: ' Debe Seleccionar el artista.' } })
 	}
 
@@ -108,6 +108,26 @@ function AlbumViewModel() {
 		self.consultarArtistas();
 	}
 
+	self.mostrar_modal_editar = function(id){
+		self.consultarArtistas();
+		path = path_principal + '/api/album/'+id+'/?format=json';
+		RequestGet(function (datos, success, mensage) {
+		 	if (success == 'success' && datos!=null) {
+		 		self.albumVO.id(datos.id);
+		 		self.albumVO.name(datos.name);
+		 		self.albumVO.cover(datos.cover);
+		 		self.albumVO.artist_id(datos.artist.id);
+
+		 	}			 	
+		 	cerrarLoading();
+		},path, parameter,undefined, false);
+		$('#editAlbumModal').modal('show');
+	}
+
+	self.eliminar = function(id){
+		alert('eliminando el id ' + id.toString());
+	}
+
 	self.guardarAlbum = function(){
 		
 		if (AlbumViewModel.errores_album().length == 0) {
@@ -130,7 +150,26 @@ function AlbumViewModel() {
 				};
 				RequestFormData(parametros);
 			}else{
+				// if($('#cover')[0].files.length==0){
+				// 	self.albumVO.cover('');
+				// }
+				var parametros={
+					callback:function(datos, success, mensaje){
 
+						if (success=='success') {
+							self.limpiar();
+							$('#editAlbumModal').modal('hide');
+							self.consultar(1);
+						}else{
+							 mensajeError(mensaje);
+						}
+					}, //funcion para recibir la respuesta 
+					url:path_principal+'/api/album/'+ self.albumVO.id() + '/',//url api
+					parametros:self.albumVO,
+					alerta:true,
+					metodo: 'PUT'
+				};
+				RequestFormData(parametros);
 			}
 		}else{
 			AlbumViewModel.errores_album.showAllMessages();
@@ -142,6 +181,9 @@ function AlbumViewModel() {
 		self.albumVO.name('');
 		self.albumVO.cover('');
 		self.albumVO.artist_id('');
+
+		$('#cover').fileinput('reset');
+		$('#cover').val('');
 	}
 
 	self.ver_detalle = function(id){

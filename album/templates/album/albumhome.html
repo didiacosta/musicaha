@@ -44,6 +44,16 @@
                           						Ver Detalle...
                           					</a>
                         				</li>
+                      		            <li>
+                          					<a href="#" data-bind="click: function(){ $root.mostrar_modal_editar(item.id) }">
+                          						Editar...
+                          					</a>
+                        				</li>
+                      		            <li>
+                          					<a href="#" data-bind="click: function(){ $root.eliminar(item.id) }">
+                          						Eliminar...
+                          					</a>
+                        				</li>
                       				  </ul>
 
 	                        		</div>
@@ -111,6 +121,55 @@
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">cancelar</button>
                     <a class="btn btn-primary" href="#" data-bind="click: guardarAlbum">Guardar</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--Modal para editar album-->
+    <div class="modal fade" id="editAlbumModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Editar Album</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                	<form action="." method="post" enctype="multipart/form-data">
+                		{% csrf_token %}
+                		<div class="form-group row">
+	                        <div class="col-sm-6 mb-3 mb-sm-0">
+	                            <input type="text" class="form-control form-control-user" id="txtNombre" placeholder="Nombre del album" data-bind="value: albumVO.name">
+	                        </div>
+                    	</div>
+	                    <div class="form-group row">
+	                        <div class="col-sm-6">
+	                        	<select class="form-control" data-bind="options: listadoDeArtistas,
+	                                           optionsText: 'nickName', 
+	                                           optionsValue: 'id', 
+	                                           optionsCaption: 'Seleccione el artista...',
+	                                           value: albumVO.artist_id" />
+	                        </div>	
+	                    </div>
+	                    <div class="form-group row">
+	                    	<div class="col-sm-6" style="float: left;">
+	                    		<input type="file" class="note-image-input" id="cover" name="cover" data-bind="fileData:{value:albumVO.cover,allowedFileExtensions: ['png','jpg', 'jpeg'],elErrorContainer: '#errorBlock', removeLabel:''}"/>
+	                    		<input type="hidden" data-bind="value:albumVO.cover">
+	                    	</div>
+	                    	<div class="col-sm-6" style="float: left;">
+	                    		<img width="50px" height="50px" data-bind="attr:{src: albumVO.cover}">
+	                    	</div>
+	                    	
+	                    </div>	                    
+                		
+                	</form>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">cancelar</button>
+                    <a class="btn btn-primary" href="#" data-bind="click: guardarAlbum">Guardar cambios</a>
                 </div>
             </div>
         </div>
