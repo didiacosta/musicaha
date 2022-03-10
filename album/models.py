@@ -6,7 +6,8 @@ class Album(models.Model):
 	name = models.CharField(max_length=30)
 	artist = models.ForeignKey(Artist, on_delete=models.PROTECT, 
 		related_name='fk_artist')
-	cover = models.ImageField(upload_to='album/', default='album/default.png')
+	cover = models.ImageField(upload_to='album/', default='album/default.png',
+		null=True, blank=True)
 
 	def __str__(self):
 		return self.name
