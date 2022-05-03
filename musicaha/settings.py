@@ -92,7 +92,7 @@ DATABASES = {
     'NAME': 'musicaha',   
     'USER': 'conecta_sinin', 
     'PASSWORD': 'santi10',
-    'HOST': 'LAPTOP-4QS42EG5\\SQLEXPRESS',   
+    'HOST': 'LAPTOP-M71AJA6S\\SQLEXPRESS',   
     'OPTIONS' : {
         'driver': 'ODBC Driver 13 for SQL Server',
     }       
