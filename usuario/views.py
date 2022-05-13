@@ -96,5 +96,5 @@ def loginAppWeb(request):
 		if status1 == 200:
 			return JsonResponse(Structure.success('',body), status = status.HTTP_200_OK)
 		else:
-			return JsonResponse(Structure.warning(mensaje),status = status.HTTP_400_BAD_REQUEST)
+			return JsonResponse(Structure.warning(mensaje))
 		#return response
