@@ -7,7 +7,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from utilities.structure import Structure
 from django.views.decorators.csrf import csrf_exempt
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 import json
 # Create your views here.
 
@@ -76,22 +76,25 @@ def loginAppWeb(request):
 				body = {'id' : user.appuser.id,
 					'username': user.username,
 					'foto': user.appuser.foto.name}
-				status = 200
+				status1 = 200
 				
 
 			else:
 				mensaje = 'el usuario ' + username + ' no se encuentra activo, ' + \
 				'consulte con el administrador del sistema'
 				body = {'message': mensaje}
-				status = 400
+				status1 = 400
 		else:
 			# el usuario no existe
 			mensaje = 'nombre de usuario y/o contraseña incorrectos'
 			body = {'message': mensaje}
-			status = 400
+			status1 = 400
 
 		#return Response(Structure.warning(mensaje),status = status.HTTP_400_BAD_REQUEST)
-		body = json.dumps(body)
-		response = HttpResponse(content=body, status=status)
-		
-		return response
+		#body = json.dumps(body)
+		#response = HttpResponse(content=body, status=status)
+		if status1 == 200:
+			return JsonResponse(Structure.success('',body), status = status.HTTP_200_OK)
+		else:
+			return JsonResponse(Structure.warning(mensaje),status = status.HTTP_400_BAD_REQUEST)
+		#return response
